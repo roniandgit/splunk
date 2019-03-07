@@ -1,0 +1,16 @@
+<dashboard>
+  <label>test</label>
+  <row>
+    <panel>
+      <table>
+        <title>test DB</title>
+        <search>
+          <query>index=_internal | table host | dedup host</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>

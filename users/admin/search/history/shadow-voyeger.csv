@@ -1,0 +1,17 @@
+sid,search,"splunk_server","_time","is_realtime",provenance,"event_count","exec_time","result_count","savedsearch_name","scan_count",status,"total_run_time","api_et","api_lt","search_et","search_lt","__mv_sid","__mv_search","__mv_splunk_server","__mv__time","__mv_is_realtime","__mv_provenance","__mv_event_count","__mv_exec_time","__mv_result_count","__mv_savedsearch_name","__mv_scan_count","__mv_status","__mv_total_run_time","__mv_api_et","__mv_api_lt","__mv_search_et","__mv_search_lt"
+"rt_md_1551932990.6","| metadata type=sourcetypes | search totalCount > 0","shadow-voyeger","1551932990.263980",1,"UI:Search",0,1551932990,0,,0,failed,"33.055",,,,,,,,,,,,,,,,,,,,,
+"admin__admin__search__search1_1551933007.7","| rest splunk_server=local /services/server/info
+| fields splunk_server version
+| join type=outer splunk_server [rest splunk_server=local /services/server/status/installed-file-integrity
+    | fields splunk_server check_ready check_failures.fail]
+| eval check_status = case(isnull('check_failures.fail') AND isnotnull(check_ready), ""enabled"", 'check_failures.fail' == ""check_disabled"", ""disabled"", isnull(check_ready), ""feature unavailable"")
+| eval check_ready = if(check_status == ""enabled"", check_ready, ""N/A"")
+| fields version check_status check_ready
+| rename version AS ""Splunk version"" check_status AS ""Check status"" check_ready AS ""Results ready?""","shadow-voyeger","1551933007.310391",0,"UI:Dashboard:integrity_check_of_installed_files",0,1551933007,1,search1,0,completed,"0.08600000000000001",,,,,,,,,,,,,,,,,,,,,
+"admin__admin__search__search2_1551933007.8","| rest splunk_server=local /services/server/status/installed-file-integrity 
+| fields check_failures.* 
+| untable splunk_server file_path check_result 
+| replace ""check_failures.*"" WITH ""*"" IN file_path
+| fields file_path check_result
+| rename file_path AS ""File path"" check_result AS ""Check result""","shadow-voyeger","1551933007.314158",0,"UI:Dashboard:integrity_check_of_installed_files",0,1551933007,0,search2,0,completed,"0.053",,,,,,,,,,,,,,,,,,,,,
+"admin__admin__search__search1_1551933099.19","search index=_internal | table host | dedup host","shadow-voyeger","1551933099.597206",0,"UI:Dashboard:test",10476,1551933099,1,search1,10476,completed,"0.76","1551844800.000000000","1551933099.000000000","1551844800.000000000","1551933099.000000000",,,,,,,,,,,,,,,,,
